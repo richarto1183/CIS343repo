@@ -1,0 +1,18 @@
+score
+player1
+_player
+player_score
+
+10
+123
+3.14
+0.5
+123.50
+
+"Hello"
+"Hello world!"
+""
+
+let x = 10; // This comment should be ignored.
+
+123.

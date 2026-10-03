@@ -1,0 +1,10 @@
+let
+when
+otherwise
+loop
+func
+return
+print
+true
+false
+null

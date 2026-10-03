@@ -1,0 +1,8 @@
+// Basic Nova program
+
+let score = 10;
+let name = "Tobin";
+
+when (score >= 5) {
+    print "You win!";
+}

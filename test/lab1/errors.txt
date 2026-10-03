@@ -1,0 +1,9 @@
+let good = 10;
+
+@
+#
+$
+
+let stillGood = 20;
+
+"This string never ends
