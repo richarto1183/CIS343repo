@@ -21,6 +21,7 @@ class Scanner:
             "false": TokenType.FALSE,
             "null": TokenType.NULL,
         }
+        self.had_error = False
 
 
     def scan_tokens(self):
@@ -105,6 +106,7 @@ class Scanner:
             self.identifier()
 
         else:
+            self.had_error = True
             print(f"[line {self.line}] Error: Unexpected character '{character}'.")
 # --- end of AI code ---
 
@@ -150,6 +152,7 @@ class Scanner:
             self.advance()
 
         if self.is_at_end():
+            self.had_error = True
             print(f"[line {self.line}] Error: Unterminated string.")
             return
 

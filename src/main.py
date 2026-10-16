@@ -1,14 +1,24 @@
 import sys
 
 from scanner import Scanner
+from parser import Parser, ParserError
+from ast_printer import AstPrinter
 
 
 def run(source):
     scanner = Scanner(source)
     tokens = scanner.scan_tokens()
+    if scanner.had_error:
+        return
 
-    for token in tokens:
-        print(token)
+    try:
+        parser = Parser(tokens)
+        expression = parser.parse()
+
+        printer = AstPrinter()
+        print(printer.print(expression))
+    except ParserError as error:
+        print(error)
 
 def run_file(path):
     with open(path, "r") as file:
