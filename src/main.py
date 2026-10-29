@@ -3,7 +3,24 @@ import sys
 from scanner import Scanner
 from parser import Parser, ParserError
 from ast_printer import AstPrinter
+from expr import EvaluationError
 
+
+def stringify(value):
+    if value is None:
+        return "null"
+    if value is True:
+        return "true"
+    if value is False:
+        return "false"
+
+    if type(value) is float:
+        text = str(value)
+        if text.endswith(".0"):
+            return text[:-2]
+        return text
+
+    return str(value)
 
 def run(source):
     scanner = Scanner(source)
@@ -17,7 +34,10 @@ def run(source):
 
         printer = AstPrinter()
         print(printer.print(expression))
-    except ParserError as error:
+
+        value = expression.interpret()
+        print(stringify(value))
+    except (ParserError, EvaluationError) as error:
         print(error)
 
 def run_file(path):
