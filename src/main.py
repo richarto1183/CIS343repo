@@ -25,18 +25,17 @@ def stringify(value):
 def run(source):
     scanner = Scanner(source)
     tokens = scanner.scan_tokens()
+
     if scanner.had_error:
         return
 
     try:
         parser = Parser(tokens)
-        expression = parser.parse()
+        statements = parser.parse()
 
-        printer = AstPrinter()
-        print(printer.print(expression))
-
-        value = expression.interpret()
-        print(stringify(value))
+        for statement in statements:
+            statement.execute()
+        
     except (ParserError, EvaluationError) as error:
         print(error)
 

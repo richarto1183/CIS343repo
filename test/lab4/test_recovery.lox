@@ -1,0 +1,4 @@
+print "Before error";
+print 5 + ;
+print "After error";
+print 10 + 5;

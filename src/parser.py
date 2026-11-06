@@ -1,5 +1,6 @@
 from token_type import TokenType
 from expr import Binary, Grouping, Unary, Literal
+from stmt import Expression, Print
 
 class ParserError(Exception):
     pass
@@ -10,12 +11,32 @@ class Parser:
         self.current = 0
 
     def parse(self):
+        statements = []
+        
+        while not self.is_at_end():
+            try:
+                statements.append(self.statement())
+            except ParserError as error:
+                print(error)
+                self.synchronize()
+        
+        return statements
+    
+    def statement(self):
+        if self.match(TokenType.PRINT):
+            return self.print_statement()
+        
+        return self.expression_statement()
+    
+    def print_statement(self):
+        value = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expected ';' after value.")
+        return Print(value)
+    
+    def expression_statement(self):
         expr = self.expression()
-
-        if not self.is_at_end():
-            raise self.error(self.peek(), "Unexpected token after expression.")
-
-        return expr
+        self.consume(TokenType.SEMICOLON, "Expected ';' after expression.")
+        return Expression(expr)
 
     def expression(self):
         return self.equality()
@@ -125,3 +146,15 @@ class Parser:
             location = f"at '{token.lexeme}'"
 
         return ParserError(f"[line {token.line}] Error {location}: {message}")
+
+    def synchronize(self):
+        self.advance()
+
+        while not self.is_at_end():
+            if self.previous().token_type == TokenType.SEMICOLON:
+                return
+
+            if self.peek().token_type in ( TokenType.PRINT, TokenType.LET, TokenType.WHEN, TokenType.LOOP, TokenType.FUNC, TokenType.RETURN):
+                return
+
+            self.advance()
