@@ -1,0 +1,23 @@
+let x = 10;
+print x;
+
+let y = x + 5;
+print y;
+
+x = 20;
+print x;
+
+x = x + 5;
+print x;
+
+let empty;
+print empty;
+
+let x = 100;
+print x;
+
+let a;
+let b;
+a = b = 50;
+print a;
+print b;

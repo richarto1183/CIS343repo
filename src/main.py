@@ -4,6 +4,9 @@ from scanner import Scanner
 from parser import Parser, ParserError
 from ast_printer import AstPrinter
 from expr import EvaluationError
+from environment import Environment
+
+environment = Environment()
 
 
 def stringify(value):
@@ -34,7 +37,7 @@ def run(source):
         statements = parser.parse()
 
         for statement in statements:
-            statement.execute()
+            statement.execute(environment)
         
     except (ParserError, EvaluationError) as error:
         print(error)

@@ -1,4 +1,4 @@
-from expr import Binary, Grouping, Unary, Literal
+from expr import Binary, Grouping, Unary, Literal, Variable, Assign
 
 
 class AstPrinter:
@@ -14,6 +14,10 @@ class AstPrinter:
             return self.visit_unary(expression)
         elif isinstance(expression, Literal):
             return self.visit_literal(expression)
+        elif isinstance(expression, Variable):
+            return self.visit_variable(expression)
+        elif isinstance(expression, Assign):
+            return self.visit_assign(expression)
         else:
             raise ValueError(f"Unknown expression type: {type(expression)}")
 
@@ -47,4 +51,8 @@ class AstPrinter:
 
         return f"(group {inside})"
 
-    
+    def visit_variable(self, expression):
+        return expression.name.lexeme
+
+    def visit_assign(self, expression):
+        return f"(= {expression.name.lexeme} {self.visit(expression.value)})"

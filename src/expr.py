@@ -16,7 +16,7 @@ class Literal:
     def __init__(self, value):
         self.value = value
 
-    def interpret(self):
+    def interpret(self, environment):
         return self.value
 
 
@@ -24,8 +24,8 @@ class Grouping:
     def __init__(self, expression):
         self.expression = expression
 
-    def interpret(self):
-        return self.expression.interpret()
+    def interpret(self, environment):
+        return self.expression.interpret(environment)
 
 
 class Unary:
@@ -33,8 +33,8 @@ class Unary:
         self.operator = operator
         self.right = right
 
-    def interpret(self):
-        right = self.right.interpret()
+    def interpret(self, environment):
+        right = self.right.interpret(environment)
 
         if self.operator.token_type == TokenType.MINUS:
             if type(right) is not float:
@@ -53,9 +53,9 @@ class Binary:
         self.operator = operator
         self.right = right
 
-    def interpret(self):
-        left = self.left.interpret()
-        right = self.right.interpret()
+    def interpret(self, environment):
+        left = self.left.interpret(environment)
+        right = self.right.interpret(environment)
         operator = self.operator.token_type
 
         if operator == TokenType.EQUAL_EQUAL:
@@ -100,4 +100,20 @@ class Binary:
             return left <= right
 
         raise EvaluationError(self.operator, "Unknown binary operator.")
-    
+
+class Variable:
+    def __init__(self, name):
+        self.name = name
+
+    def interpret(self, environment):
+        return environment.get(self.name)
+
+class Assign:
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+    def interpret(self, environment):
+        value = self.value.interpret(environment)
+        environment.assign(self.name, value)
+        return value
